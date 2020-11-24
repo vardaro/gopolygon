@@ -20,7 +20,14 @@ func TestAggregate(t *testing.T) {
 	jan1, _ := time.Parse("2006-01-02 15:04", "2020-01-01 00:00")
 	jan2, _ := time.Parse("2006-01-02 15:04", "2020-01-02 00:00")
 
-	resp, err := client.Aggregates("AAPL", 1, "day", &jan1, &jan2, nil)
+	query := &gopolygon.AggregatesQuery{
+		Symbol:     "AAPL",
+		Multiplier: 1,
+		Timespan:   "day",
+		From:       jan1,
+		To:         jan2,
+	}
+	resp, err := client.Aggregates(query)
 	if err != nil {
 		t.Errorf("Error in client.Aggregate")
 	}
