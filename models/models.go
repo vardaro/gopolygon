@@ -3,22 +3,15 @@ package models
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
 type Bar struct {
-	O  float64 `json:"o"`
-	H  float64 `json:"h"`
-	L  float64 `json:"l"`
-	C  float64 `json:"c"`
-	V  float64 `json:"v"`
-	VW float64 `json:"vw"`
-	T  int64   `json:"t"`
-	N  int64   `json:"n"`
-}
-
-// BarPreviousClose struct. It's seperate because
-// The PreviousClose route returns a Bar object with the addition
-// of the ticker
-type BarPreviousClose struct {
-	Bar
-	Ticker string `json:"T"`
+	O      float64 `json:"o"`
+	H      float64 `json:"h"`
+	L      float64 `json:"l"`
+	C      float64 `json:"c"`
+	V      float64 `json:"v"`
+	VW     float64 `json:"vw"`
+	T      int64   `json:"t"`
+	N      int64   `json:"n"`
+	Ticker string  `json:"T"`
 }
 
 // HistoricTrade contains json of a trade from polygon
@@ -112,11 +105,11 @@ type DailyOpenCloseQuery struct {
 
 // PreviousCloseResponse struct for PreviousClose endpoint
 type PreviousCloseResponse struct {
-	Ticker       string             `json:"ticker"`
-	QueryCount   int                `json:"queryCount"`
-	ResultsCount int                `json:"resultsCount"`
-	Adjusted     bool               `json:"adjusted"`
-	Results      []BarPreviousClose `json:"results"`
+	Ticker       string `json:"ticker"`
+	QueryCount   int    `json:"queryCount"`
+	ResultsCount int    `json:"resultsCount"`
+	Adjusted     bool   `json:"adjusted"`
+	Results      []Bar  `json:"results"`
 }
 
 // PreviousCloseQuery struct for querying the Previous Close route.
