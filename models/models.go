@@ -13,6 +13,14 @@ type Bar struct {
 	N  int64   `json:"n"`
 }
 
+// BarPreviousClose struct. It's seperate because
+// The PreviousClose route returns a Bar object with the addition
+// of the ticker
+type BarPreviousClose struct {
+	Bar
+	Ticker string `json:"T"`
+}
+
 // HistoricTrade contains json of a trade from polygon
 // The object contains both and 'I' and an 'i' field, so HistoricalTrade.OriginalID maps to 'I'
 // and HistoricTrade.I maps to 'i'
@@ -33,7 +41,7 @@ type HistoricTrade struct {
 // AggregatesResponse corresponds to the results from
 // /v2/aggs
 type AggregatesResponse struct {
-	Symbol       string `json:"ticker"`
+	Ticker       string `json:"ticker"`
 	Status       string `json:"status"`
 	QueryCount   int    `json:"queryCount"`
 	ResultsCount int    `json:"resultsCount"`
@@ -64,7 +72,7 @@ type MapItem struct {
 // HistoricTradesResponse corresponds to results from
 // /ticks/
 type HistoricTradesResponse struct {
-	Symbol       string             `json:"ticker"`
+	Ticker       string             `json:"ticker"`
 	ResultsCount int                `json:"results_count"`
 	Success      bool               `json:"success"`
 	DBLatency    int                `json:"db_latency"`
@@ -91,7 +99,7 @@ type DailyOpenCloseResponse struct {
 	Low        float64 `json:"low"`
 	Close      float64 `json:"close"`
 	Volume     float64 `json:"volume"`
-	PreMarket  float64 `json:"preMarket"` // Why is
+	PreMarket  float64 `json:"preMarket"`
 	AfterHours float64 `json:"afterHours"`
 }
 
@@ -100,6 +108,21 @@ type DailyOpenCloseResponse struct {
 type DailyOpenCloseQuery struct {
 	Symbol string
 	Date   string // I think this doesnt support milliseconds?
+}
+
+// PreviousCloseResponse struct for PreviousClose endpoint
+type PreviousCloseResponse struct {
+	Ticker       string             `json:"ticker"`
+	QueryCount   int                `json:"queryCount"`
+	ResultsCount int                `json:"resultsCount"`
+	Adjusted     bool               `json:"adjusted"`
+	Results      []BarPreviousClose `json:"results"`
+}
+
+// PreviousCloseQuery struct for querying the Previous Close route.
+type PreviousCloseQuery struct {
+	Symbol     string
+	Unadjusted *bool
 }
 
 // APIError struct wrapper for API errors

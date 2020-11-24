@@ -15,6 +15,7 @@ const (
 	routeAggregates     = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
 	routeHistoricTrades = "%v/v2/ticks/stocks/trades/%v/%v"
 	routeDailyOpenClose = "%v/v1/open-close/%v/%v"
+	routePreviousClose  = "%v/v2/aggs/ticker/%v/prev"
 )
 
 var (
@@ -151,6 +152,42 @@ func (c *Client) DailyOpenClose(opts *models.DailyOpenCloseQuery) (*models.Daily
 	}
 
 	return result, nil
+}
+
+// PreviousClose function to query the Previous Close endpoint
+func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.PreviousCloseResponse, error) {
+	// Build URL
+	url, err := url.Parse(
+		fmt.Sprintf(routePreviousClose, baseURL, opts.Symbol))
+	if err != nil {
+		return nil, err
+	}
+
+	q := url.Query()
+	q.Set("apiKey", c.APIKey)
+
+	if opts.Unadjusted != nil {
+		q.Set("unadjusted", strconv.FormatBool(*opts.Unadjusted))
+	}
+
+	url.RawQuery = q.Encode()
+	resp, err := get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode > http.StatusMultipleChoices {
+		return nil, fmt.Errorf("error %v", resp.StatusCode)
+	}
+
+	result := &models.PreviousCloseResponse{}
+	err = unmarshalPolygonResponse(resp, &result)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	return result, nil
+
 }
 
 // Casts a Polygon response to interface

@@ -1,2 +1,2 @@
 default:
-	go test `go list ./... | grep -v examples` -v
+	go test `go list ./... | grep -v examples`
