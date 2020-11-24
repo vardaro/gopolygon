@@ -59,10 +59,6 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 		return nil, err
 	}
 
-	if response.StatusCode >= http.StatusMultipleChoices {
-		return nil, fmt.Errorf("error %v", response.StatusCode)
-	}
-
 	result := &models.AggregatesResponse{}
 	err = unmarshalPolygonResponse(response, &result)
 	if err != nil {
@@ -108,10 +104,6 @@ func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.Histo
 		return nil, err
 	}
 
-	if resp.StatusCode >= http.StatusMultipleChoices {
-		return nil, fmt.Errorf("error %v", resp.StatusCode)
-	}
-
 	result := &models.HistoricTradesResponse{}
 	err = unmarshalPolygonResponse(resp, &result)
 	if err != nil {
@@ -139,10 +131,6 @@ func (c *Client) DailyOpenClose(opts *models.DailyOpenCloseQuery) (*models.Daily
 
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode > http.StatusMultipleChoices {
-		return nil, fmt.Errorf("error %v", resp.StatusCode)
 	}
 
 	result := &models.DailyOpenCloseResponse{}
@@ -174,10 +162,6 @@ func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.Previou
 	resp, err := get(url)
 	if err != nil {
 		return nil, err
-	}
-
-	if resp.StatusCode > http.StatusMultipleChoices {
-		return nil, fmt.Errorf("error %v", resp.StatusCode)
 	}
 
 	result := &models.PreviousCloseResponse{}
