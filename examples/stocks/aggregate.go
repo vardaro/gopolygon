@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"time"
 
 	gpoly "github.com/vardaro/gopolygon"
 )
@@ -16,16 +15,13 @@ func main() {
 	}
 	client := gpoly.NewClient(apikey)
 
-	// Print price data from the last month
-	now := time.Now()
-	lastmonth := now.AddDate(0, -1, 0)
-
+	// Query the last month of data
 	query := &gpoly.AggregatesQuery{
 		Symbol:     "AAPL",
 		Multiplier: 1,
 		Timespan:   "day",
-		From:       lastmonth,
-		To:         now,
+		From:       "2020-10-01",
+		To:         "2020-11-01",
 		Unadjusted: gpoly.Bool(true),
 	}
 

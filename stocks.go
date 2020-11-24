@@ -10,22 +10,24 @@ import (
 )
 
 const (
-	aggregatesURL     = "%v/aggs/ticker/%v/range/%v/%v/%v/%v"
-	historicTradesURL = "%v/ticks/stocks/trades/%v/%v"
+	routeAggregates     = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
+	routeHistoricTrades = "%v/v2/ticks/stocks/trades/%v/%v"
+	routeDailyOpenClose = "%v/v1/open-close/%v/%v"
 )
 
 var (
-	baseURL = "https://api.polygon.io/v2"
+	baseURL = "https://api.polygon.io"
 	get     = func(url *url.URL) (*http.Response, error) {
 		return http.Get(url.String())
 	}
 )
 
 // Aggregates corresponds to the /aggs/ route.
+// https://polygon.io/docs/get_v2_aggs_ticker__stocksTicker__range__multiplier___timespan___from___to__anchor
 func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(aggregatesURL, baseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From.Unix()*1000, opts.To.Unix()*1000))
+		fmt.Sprintf(routeAggregates, baseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From, opts.To))
 	if err != nil {
 		return nil, err
 	}
@@ -58,10 +60,11 @@ func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) 
 }
 
 // HistoricTrades queries the Historic Trades route.
+// https://polygon.io/docs/get_v2_ticks_stocks_trades__ticker___date__anchor
 func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(historicTradesURL, baseURL, opts.Symbol, opts.Date.Unix()*1000))
+		fmt.Sprintf(routeHistoricTrades, baseURL, opts.Symbol, opts.Date))
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +107,38 @@ func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesRespo
 
 	return result, nil
 
+}
+
+// DailyOpenClose function to query the DailyOpenClose route
+// https://polygon.io/docs/get_v1_open-close__stocksTicker___date__anchor
+func (c *Client) DailyOpenClose(opts *DailyOpenCloseQuery) (*DailyOpenCloseResponse, error) {
+	// Build URL
+	url, err := url.Parse(
+		fmt.Sprintf(routeDailyOpenClose, baseURL, opts.Symbol, opts.Date))
+	if err != nil {
+		return nil, err
+	}
+
+	q := url.Query()
+	q.Set("apiKey", c.APIKey)
+	url.RawQuery = q.Encode()
+	resp, err := get(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode > http.StatusMultipleChoices {
+		return nil, fmt.Errorf("error %v", resp.StatusCode)
+	}
+
+	result := &DailyOpenCloseResponse{}
+	err = unmarshalPolygonResponse(resp, &result)
+	if err != nil {
+		return nil, err
+	}
+
+	return result, nil
 }
 
 // Casts a Polygon response to interface
