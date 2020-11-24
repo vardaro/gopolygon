@@ -19,7 +19,12 @@ func String(str string) *string {
 	return &str
 }
 
-// Bool returns the address of the input
+// Bool returns the address of b
 func Bool(b bool) *bool {
 	return &b
+}
+
+// Int64 returns the address of i
+func Int64(i int64) *int64 {
+	return &i
 }
