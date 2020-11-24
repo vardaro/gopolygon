@@ -19,8 +19,7 @@ func main() {
 	// Print price data from the last month
 	now := time.Now()
 	lastmonth := now.AddDate(0, -1, 0)
-	unadjusted := true
-	resp, err := client.Aggregates("AAPL", 1, "day", &lastmonth, &now, &unadjusted)
+	resp, err := client.Aggregates("AAPL", 1, "day", &lastmonth, &now, false)
 	if err != nil {
 		fmt.Println("Fail")
 	}
