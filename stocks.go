@@ -11,9 +11,6 @@ import (
 )
 
 const (
-	envBaseURL = "POLYGON_BASE_URL"
-	envAPIKey  = "POLYGON_API_KEY"
-
 	aggregatesURL = "%v/aggs/ticker/%v/range/%v/%v/%v/%v"
 )
 
