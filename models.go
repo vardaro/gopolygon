@@ -1,9 +1,5 @@
 package gopolygon
 
-import (
-	"time"
-)
-
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
 type Bar struct {
@@ -51,8 +47,8 @@ type AggregatesQuery struct {
 	Symbol     string
 	Multiplier int
 	Timespan   string
-	From       time.Time
-	To         time.Time
+	From       string
+	To         string
 	Unadjusted *bool
 	Sort       *string
 	Limit      *int
@@ -79,17 +75,37 @@ type HistoricTradesResponse struct {
 // HistoricTradesQuery query object for the HistoricTrades endpoint
 type HistoricTradesQuery struct {
 	Symbol         string
-	Date           time.Time
+	Date           string
 	Timestamp      *int64
 	TimestampLimit *int64
 	Reverse        *bool
 	Limit          *int64
 }
 
+// DailyOpenCloseResponse response object of the Daily Open/Close route
+type DailyOpenCloseResponse struct {
+	Symbol     string  `json:"symbol"`
+	From       string  `json:"from"`
+	Open       float64 `json:"open"`
+	High       float64 `json:"high"`
+	Low        float64 `json:"low"`
+	Close      float64 `json:"close"`
+	Volume     float64 `json:"volume"`
+	PreMarket  float64 `json:"preMarket"` // Why is
+	AfterHours float64 `json:"afterHours"`
+}
+
+// DailyOpenCloseQuery struct for querying the route
+// why is polygon naming so inconsistent?
+type DailyOpenCloseQuery struct {
+	Symbol string
+	Date   string // I think this doesnt support milliseconds?
+}
+
 // APIError struct wrapper for API errors
 type APIError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Code    string `json:"status"`
+	Message string `json:"error"`
 }
 
 func (e *APIError) Error() string {
