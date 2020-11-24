@@ -1,4 +1,4 @@
-package stocks
+package gopolygon
 
 import (
 	"encoding/json"
@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"strconv"
 	"time"
 )
@@ -25,33 +24,6 @@ var (
 	}
 )
 
-// init sets baseURL and apiKey
-func init() {
-	if os.Getenv(envAPIKey) == "" {
-		fmt.Println("Missing API Key in " + envAPIKey)
-	}
-}
-
-// APIError struct wrapper for API errors
-type APIError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-}
-
-func (e *APIError) Error() string {
-	return e.Message
-}
-
-// Client is polygon api client
-type Client struct {
-	APIKey string
-}
-
-// NewClient returns a new Client instance.
-func NewClient(apikey string) *Client {
-	return &Client{APIKey: apikey}
-}
-
 // Aggregates corresponds to the /aggs/ route.
 func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string, from, to *time.Time, unadjusted *bool) (*AggregatesResponse, error) {
 	// Build URL
@@ -69,7 +41,7 @@ func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string,
 	}
 
 	url.RawQuery = q.Encode()
-
+	fmt.Println(url)
 	response, err := get(url)
 	if err != nil {
 		return nil, err

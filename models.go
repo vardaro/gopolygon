@@ -1,4 +1,4 @@
-package models
+package gopolygon
 
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
@@ -22,4 +22,14 @@ type AggregatesResponse struct {
 	ResultsCount int    `json:"resultsCount"`
 	Adjusted     bool   `json:"adjusted"`
 	Results      []Bar  `json:"results"`
+}
+
+// APIError struct wrapper for API errors
+type APIError struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+func (e *APIError) Error() string {
+	return e.Message
 }
