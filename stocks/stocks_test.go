@@ -74,3 +74,20 @@ func TestDailyOpenClose(t *testing.T) {
 		t.Errorf("DailyOpenClose.High = %v, want %v", resp.High, expectedHigh)
 	}
 }
+
+func TestPreviousClose(t *testing.T) {
+	unadjusted := true
+	query := &models.PreviousCloseQuery{
+		Symbol:     "AAPL",
+		Unadjusted: &unadjusted,
+	}
+	resp, err := client.PreviousClose(query)
+	if err != nil {
+		t.Errorf("Error in client.PreviousClose")
+		return
+	}
+
+	if unadjusted == resp.Adjusted {
+		t.Errorf("PreviousClose.Adjusted = %v, want %v", resp.Adjusted, !resp.Adjusted)
+	}
+}

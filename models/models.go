@@ -3,14 +3,15 @@ package models
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
 type Bar struct {
-	O  float64 `json:"o"`
-	H  float64 `json:"h"`
-	L  float64 `json:"l"`
-	C  float64 `json:"c"`
-	V  float64 `json:"v"`
-	VW float64 `json:"vw"`
-	T  int64   `json:"t"`
-	N  int64   `json:"n"`
+	O      float64 `json:"o"`
+	H      float64 `json:"h"`
+	L      float64 `json:"l"`
+	C      float64 `json:"c"`
+	V      float64 `json:"v"`
+	VW     float64 `json:"vw"`
+	T      int64   `json:"t"`
+	N      int64   `json:"n"`
+	Ticker string  `json:"T"`
 }
 
 // HistoricTrade contains json of a trade from polygon
@@ -33,7 +34,7 @@ type HistoricTrade struct {
 // AggregatesResponse corresponds to the results from
 // /v2/aggs
 type AggregatesResponse struct {
-	Symbol       string `json:"ticker"`
+	Ticker       string `json:"ticker"`
 	Status       string `json:"status"`
 	QueryCount   int    `json:"queryCount"`
 	ResultsCount int    `json:"resultsCount"`
@@ -64,7 +65,7 @@ type MapItem struct {
 // HistoricTradesResponse corresponds to results from
 // /ticks/
 type HistoricTradesResponse struct {
-	Symbol       string             `json:"ticker"`
+	Ticker       string             `json:"ticker"`
 	ResultsCount int                `json:"results_count"`
 	Success      bool               `json:"success"`
 	DBLatency    int                `json:"db_latency"`
@@ -91,7 +92,7 @@ type DailyOpenCloseResponse struct {
 	Low        float64 `json:"low"`
 	Close      float64 `json:"close"`
 	Volume     float64 `json:"volume"`
-	PreMarket  float64 `json:"preMarket"` // Why is
+	PreMarket  float64 `json:"preMarket"`
 	AfterHours float64 `json:"afterHours"`
 }
 
@@ -100,6 +101,21 @@ type DailyOpenCloseResponse struct {
 type DailyOpenCloseQuery struct {
 	Symbol string
 	Date   string // I think this doesnt support milliseconds?
+}
+
+// PreviousCloseResponse struct for PreviousClose endpoint
+type PreviousCloseResponse struct {
+	Ticker       string `json:"ticker"`
+	QueryCount   int    `json:"queryCount"`
+	ResultsCount int    `json:"resultsCount"`
+	Adjusted     bool   `json:"adjusted"`
+	Results      []Bar  `json:"results"`
+}
+
+// PreviousCloseQuery struct for querying the Previous Close route.
+type PreviousCloseQuery struct {
+	Symbol     string
+	Unadjusted *bool
 }
 
 // APIError struct wrapper for API errors
