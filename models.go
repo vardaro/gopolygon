@@ -1,5 +1,9 @@
 package gopolygon
 
+import (
+	"time"
+)
+
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
 type Bar struct {
@@ -41,6 +45,19 @@ type AggregatesResponse struct {
 	Results      []Bar  `json:"results"`
 }
 
+// AggregatesQuery input payload for making queries to aggregates endpoint
+// pointer fields are optional, so they can be nil
+type AggregatesQuery struct {
+	Symbol     string
+	Multiplier int
+	Timespan   string
+	From       time.Time
+	To         time.Time
+	Unadjusted *bool
+	Sort       *string
+	Limit      *int
+}
+
 // MapItem corresponds to an element within the map property of a HistoricTrades Response
 // Maps can be found here, https://polygon.io/docs/get_v2_ticks_stocks_trades__ticker___date__anchor
 type MapItem struct {
@@ -57,6 +74,16 @@ type HistoricTradesResponse struct {
 	DBLatency    int                `json:"db_latency"`
 	Results      []HistoricTrade    `json:"results"`
 	Map          map[string]MapItem `json:"map"`
+}
+
+// HistoricTradesQuery query object for the HistoricTrades endpoint
+type HistoricTradesQuery struct {
+	Symbol         string
+	Date           time.Time
+	Timestamp      *int64
+	TimestampLimit *int64
+	Reverse        *bool
+	Limit          *int64
 }
 
 // APIError struct wrapper for API errors
