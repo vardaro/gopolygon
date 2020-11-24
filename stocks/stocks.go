@@ -1,4 +1,4 @@
-package gopolygon
+package stocks
 
 import (
 	"encoding/json"
@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+
+	"github.com/vardaro/gopolygon/models"
 )
 
 const (
@@ -22,9 +24,19 @@ var (
 	}
 )
 
+// Client is polygon api client
+type Client struct {
+	APIKey string
+}
+
+// NewClient returns a new Client instance.
+func NewClient(apikey string) *Client {
+	return &Client{APIKey: apikey}
+}
+
 // Aggregates corresponds to the /aggs/ route.
 // https://polygon.io/docs/get_v2_aggs_ticker__stocksTicker__range__multiplier___timespan___from___to__anchor
-func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) {
+func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
 		fmt.Sprintf(routeAggregates, baseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From, opts.To))
@@ -50,7 +62,7 @@ func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) 
 		return nil, fmt.Errorf("error %v", response.StatusCode)
 	}
 
-	result := &AggregatesResponse{}
+	result := &models.AggregatesResponse{}
 	err = unmarshalPolygonResponse(response, &result)
 	if err != nil {
 		return nil, err
@@ -61,7 +73,7 @@ func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) 
 
 // HistoricTrades queries the Historic Trades route.
 // https://polygon.io/docs/get_v2_ticks_stocks_trades__ticker___date__anchor
-func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesResponse, error) {
+func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.HistoricTradesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
 		fmt.Sprintf(routeHistoricTrades, baseURL, opts.Symbol, opts.Date))
@@ -99,7 +111,7 @@ func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesRespo
 		return nil, fmt.Errorf("error %v", resp.StatusCode)
 	}
 
-	result := &HistoricTradesResponse{}
+	result := &models.HistoricTradesResponse{}
 	err = unmarshalPolygonResponse(resp, &result)
 	if err != nil {
 		return nil, err
@@ -111,7 +123,7 @@ func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesRespo
 
 // DailyOpenClose function to query the DailyOpenClose route
 // https://polygon.io/docs/get_v1_open-close__stocksTicker___date__anchor
-func (c *Client) DailyOpenClose(opts *DailyOpenCloseQuery) (*DailyOpenCloseResponse, error) {
+func (c *Client) DailyOpenClose(opts *models.DailyOpenCloseQuery) (*models.DailyOpenCloseResponse, error) {
 	// Build URL
 	url, err := url.Parse(
 		fmt.Sprintf(routeDailyOpenClose, baseURL, opts.Symbol, opts.Date))
@@ -132,7 +144,7 @@ func (c *Client) DailyOpenClose(opts *DailyOpenCloseQuery) (*DailyOpenCloseRespo
 		return nil, fmt.Errorf("error %v", resp.StatusCode)
 	}
 
-	result := &DailyOpenCloseResponse{}
+	result := &models.DailyOpenCloseResponse{}
 	err = unmarshalPolygonResponse(resp, &result)
 	if err != nil {
 		return nil, err

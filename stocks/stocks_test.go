@@ -1,30 +1,39 @@
-package testing
+package stocks
 
 import (
 	"fmt"
 	"os"
 	"testing"
 
-	"github.com/vardaro/gopolygon"
+	"github.com/vardaro/gopolygon/models"
 )
 
 var (
 	apikey string
-	client *gopolygon.Client
+	client *Client
 )
 
 func init() {
-	apikey := os.Getenv(gopolygon.EnvAPIKey)
+	apikey := os.Getenv("POLYGON_API_KEY")
 	if apikey == "" {
 		fmt.Println("Cant find API Key")
 		return
 	}
-	client = gopolygon.NewClient(apikey)
+	client = NewClient(apikey)
+}
+
+func TestClient(t *testing.T) {
+	want := "1001"
+	got := NewClient("1001")
+
+	if got.APIKey != want {
+		t.Errorf("NewClient().APIKey = %v, want %v", got.APIKey, want)
+	}
 }
 
 // Test the stock aggregate function.
 func TestAggregate(t *testing.T) {
-	query := &gopolygon.AggregatesQuery{
+	query := &models.AggregatesQuery{
 		Symbol:     "AAPL",
 		Multiplier: 1,
 		Timespan:   "day",
@@ -49,7 +58,7 @@ func TestAggregate(t *testing.T) {
 }
 
 func TestDailyOpenClose(t *testing.T) {
-	query := &gopolygon.DailyOpenCloseQuery{
+	query := &models.DailyOpenCloseQuery{
 		Symbol: "AAPL",
 		Date:   "2020-06-03",
 	}
