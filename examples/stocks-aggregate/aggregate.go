@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	apikey := os.Getenv("POLYGON_API_KEY")
+	apikey := os.Getenv(gopolygon.EnvAPIKey)
 	if apikey == "" {
 		fmt.Println("Cant find API Key")
 		return

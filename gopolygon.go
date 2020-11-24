@@ -1,5 +1,8 @@
 package gopolygon
 
+// Environment var that corresponds to api key
+const EnvAPIKey = "POLYGON_API_KEY"
+
 // Client is polygon api client
 type Client struct {
 	APIKey string

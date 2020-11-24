@@ -38,7 +38,6 @@ func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string,
 	}
 
 	url.RawQuery = q.Encode()
-	fmt.Println(url)
 	response, err := get(url)
 	if err != nil {
 		return nil, err
