@@ -4,25 +4,25 @@ import (
 	"fmt"
 	"os"
 
-	gpoly "github.com/vardaro/gopolygon"
+	"github.com/vardaro/gopolygon/models"
+	"github.com/vardaro/gopolygon/stocks"
 )
 
 func main() {
-	apikey := os.Getenv(gpoly.EnvAPIKey)
+	apikey := os.Getenv("POLYGON_API_KEY")
 	if apikey == "" {
 		fmt.Println("Cant find API Key")
 		return
 	}
-	client := gpoly.NewClient(apikey)
+	client := stocks.NewClient(apikey)
 
 	// Query the last month of data
-	query := &gpoly.AggregatesQuery{
+	query := &models.AggregatesQuery{
 		Symbol:     "AAPL",
 		Multiplier: 1,
 		Timespan:   "day",
 		From:       "2020-10-01",
 		To:         "2020-11-01",
-		Unadjusted: gpoly.Bool(true),
 	}
 
 	resp, err := client.Aggregates(query)

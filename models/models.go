@@ -1,4 +1,4 @@
-package gopolygon
+package models
 
 // Bar corresponds to the "results" property in
 // the response from /v2/aggs/
