@@ -1,6 +1,7 @@
 package gopolygon
 
 // EnvAPIKey Environment var that corresponds to api key
+// Mostly here for testing purposes
 const EnvAPIKey = "POLYGON_API_KEY"
 
 // Client is polygon api client
