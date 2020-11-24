@@ -7,7 +7,6 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
-	"time"
 )
 
 const (
@@ -23,9 +22,10 @@ var (
 )
 
 // Aggregates corresponds to the /aggs/ route.
-func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string, from, to *time.Time, unadjusted bool) (*AggregatesResponse, error) {
+func (c *Client) Aggregates(opts *AggregatesQuery) (*AggregatesResponse, error) {
 	// Build URL
-	url, err := url.Parse(fmt.Sprintf(aggregatesURL, baseURL, stockTicker, multiplier, timespan, from.Unix()*1000, to.Unix()*1000))
+	url, err := url.Parse(
+		fmt.Sprintf(aggregatesURL, baseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From.Unix()*1000, opts.To.Unix()*1000))
 	if err != nil {
 		return nil, err
 	}
@@ -34,8 +34,8 @@ func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string,
 	q.Set("apiKey", c.APIKey)
 
 	// Cast unadjusted bool -> string
-	if unadjusted {
-		q.Set("unadjusted", strconv.FormatBool(unadjusted))
+	if opts.Unadjusted != nil {
+		q.Set("unadjusted", strconv.FormatBool(*opts.Unadjusted))
 	}
 
 	url.RawQuery = q.Encode()
@@ -58,9 +58,10 @@ func (c *Client) Aggregates(stockTicker string, multiplier int, timespan string,
 }
 
 // HistoricTrades queries the Historic Trades route.
-func (c *Client) HistoricTrades(stockTicker string, date *time.Time, timestamp int64, timestampLimit int64, reverse bool, limit int64) (*HistoricTradesResponse, error) {
+func (c *Client) HistoricTrades(opts *HistoricTradesQuery) (*HistoricTradesResponse, error) {
 	// Build URL
-	url, err := url.Parse(fmt.Sprintf(historicTradesURL, baseURL, stockTicker, date.Unix()*1000))
+	url, err := url.Parse(
+		fmt.Sprintf(historicTradesURL, baseURL, opts.Symbol, opts.Date.Unix()*1000))
 	if err != nil {
 		return nil, err
 	}
@@ -70,20 +71,20 @@ func (c *Client) HistoricTrades(stockTicker string, date *time.Time, timestamp i
 	url.RawQuery = q.Encode()
 
 	// Set other params if applicable
-	if timestamp != 0 {
-		q.Set("timestamp", strconv.FormatInt(timestamp, 10))
+	if opts.Timestamp != nil {
+		q.Set("timestamp", strconv.FormatInt(*opts.Timestamp, 10))
 	}
 
-	if timestampLimit != 0 {
-		q.Set("timestampLimit", strconv.FormatInt(timestampLimit, 10))
+	if opts.TimestampLimit != nil {
+		q.Set("timestampLimit", strconv.FormatInt(*opts.TimestampLimit, 10))
 	}
 
-	if reverse {
-		q.Set("reverse", strconv.FormatBool(reverse))
+	if opts.Reverse != nil {
+		q.Set("reverse", strconv.FormatBool(*opts.Reverse))
 	}
 
-	if limit != 0 {
-		q.Set("limit", strconv.FormatInt(limit, 10))
+	if opts.Limit != nil {
+		q.Set("limit", strconv.FormatInt(*opts.Limit, 10))
 	}
 
 	resp, err := get(url)
