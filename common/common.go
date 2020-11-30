@@ -19,32 +19,6 @@ func NewAPIError(response *http.Response) error {
 	return err
 }
 
-// UnmarshalPolygonResponse Casts a Polygon response to interface
-func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
-	defer response.Body.Close()
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(body, data)
-}
-
-// Get wrapper
-// func Get(url *url.URL) (*http.Response, error) {
-// 	fmt.Println(url)
-
-// 	response, err := http.Get(url.String())
-
-// 	// Catch API error
-// 	if response.StatusCode != 200 {
-// 		return nil, NewAPIError(response)
-// 	}
-
-// 	return response, err
-// }
-
 // Get wrapper
 func Get(url *url.URL, responseStruct interface{}) (interface{}, error) {
 	response, err := http.Get(url.String())
@@ -62,4 +36,16 @@ func Get(url *url.URL, responseStruct interface{}) (interface{}, error) {
 		return nil, err
 	}
 	return responseStruct, nil
+}
+
+// UnmarshalPolygonResponse Casts a Polygon response to interface
+func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
+	defer response.Body.Close()
+
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	return json.Unmarshal(body, data)
 }

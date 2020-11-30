@@ -44,18 +44,9 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 	}
 
 	url.RawQuery = q.Encode()
-	response, err := common.Get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.AggregatesResponse{}
-	err = common.UnmarshalPolygonResponse(response, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
+	inter, err := common.Get(url, &models.AggregatesResponse{})
+	return inter.(*models.AggregatesResponse), err
 }
 
 // PreviousClose function to query the Previous Close endpoint
@@ -75,17 +66,9 @@ func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.Previou
 	}
 
 	url.RawQuery = q.Encode()
-	resp, err := common.Get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.PreviousCloseResponse{}
-	err = common.UnmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	inter, err := common.Get(url, &models.PreviousCloseResponse{})
+	return inter.(*models.PreviousCloseResponse), err
 
 }
 
@@ -106,15 +89,7 @@ func (c *Client) GroupedDailyBars(opts *models.GroupedDailyBarsQuery) (*models.G
 	}
 
 	url.RawQuery = q.Encode()
-	resp, err := common.Get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.GroupedDailyBarsResponse{}
-	err = common.UnmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	inter, err := common.Get(url, &models.GroupedDailyBarsResponse{})
+	return inter.(*models.GroupedDailyBarsResponse), err
 }
