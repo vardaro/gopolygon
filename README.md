@@ -28,7 +28,7 @@ func main() {
 
 	aapl, _ := client.DailyOpenClose(query)
 
-	fmt.Println(aapl.High)
+	fmt.Println(aapl.Close)
 }
 ```
 
