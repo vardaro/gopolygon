@@ -12,6 +12,8 @@ import (
 )
 
 const (
+	baseURL = "https://api.polygon.io"
+
 	routeAggregates       = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
 	routeHistoricTrades   = "%v/v2/ticks/stocks/trades/%v/%v"
 	routeDailyOpenClose   = "%v/v1/open-close/%v/%v"
@@ -19,22 +21,14 @@ const (
 	routeGroupedDailyBars = "%v/v2/aggs/grouped/locale/us/market/stocks/%v"
 )
 
-var (
-	baseURL = "https://api.polygon.io"
-	get     = func(url *url.URL) (*http.Response, error) {
-		fmt.Println(url)
-		return http.Get(url.String())
-	}
-) // If the user chose
+// Client is polygon api client
+type Client struct {
+	APIKey string
+}
 
 // NewClient returns a new Client instance.
 func NewClient(apikey string) *Client {
 	return &Client{APIKey: apikey}
-}
-
-// Client is polygon api client
-type Client struct {
-	APIKey string
 }
 
 // Aggregates corresponds to the /aggs/ route.
@@ -215,4 +209,9 @@ func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
 	}
 
 	return json.Unmarshal(body, data)
+}
+
+func get(url *url.URL) (*http.Response, error) {
+	fmt.Println(url)
+	return http.Get(url.String())
 }
