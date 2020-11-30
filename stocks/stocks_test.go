@@ -1,5 +1,8 @@
 package stocks
 
+// Although this is a test file, the test will often fail due
+// being rate limited by the api when testing each function consecutively
+
 import (
 	"fmt"
 	"os"
@@ -90,4 +93,22 @@ func TestPreviousClose(t *testing.T) {
 	if unadjusted == resp.Adjusted {
 		t.Errorf("PreviousClose.Adjusted = %v, want %v", resp.Adjusted, !resp.Adjusted)
 	}
+}
+
+func TestGroupedDailyBar(t *testing.T) {
+	query := &models.GroupedDailyBarsQuery{
+		Date: "2020-10-14",
+	}
+
+	resp, err := client.GroupedDailyBars(query)
+	if err != nil {
+		t.Errorf("Error in client.GroupedDailyBars")
+		return
+	}
+
+	expectedQueryCount := 8942
+	if expectedQueryCount != resp.QueryCount {
+		t.Errorf("PreviousClose.QueryCount = %v, want %v", resp.QueryCount, expectedQueryCount)
+	}
+
 }

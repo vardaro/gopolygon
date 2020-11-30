@@ -118,6 +118,22 @@ type PreviousCloseQuery struct {
 	Unadjusted *bool
 }
 
+// GroupedDailyBarsResponse struct for grouped daily route resp
+type GroupedDailyBarsResponse struct {
+	Status       string `json:"status"`
+	Adjusted     bool   `json:"adjusted"`
+	QueryCount   int    `json:"queryCount"`
+	ResultsCount int    `json:"resultsCount"`
+	RequestID    string `json:"request_id"`
+	Results      []Bar  `json:"results"`
+}
+
+// GroupedDailyBarsQuery struct for querying grouped daily route.
+type GroupedDailyBarsQuery struct {
+	Date       string
+	Unadjusted *bool
+}
+
 // APIError struct wrapper for API errors
 type APIError struct {
 	Code    string `json:"status"`
