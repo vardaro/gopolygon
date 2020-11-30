@@ -136,7 +136,7 @@ type GroupedDailyBarsQuery struct {
 
 // APIError struct wrapper for API errors
 type APIError struct {
-	Code    string `json:"status"`
+	Status  string `json:"status"`
 	Message string `json:"error"`
 }
 

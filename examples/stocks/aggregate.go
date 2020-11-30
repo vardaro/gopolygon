@@ -28,12 +28,10 @@ func main() {
 
 	resp, err := client.Aggregates(query)
 	if err != nil {
-		fmt.Println("Fail")
+		fmt.Println(err.Error())
 		return
 	}
 
-	for i := 0; i < resp.ResultsCount; i++ {
-		fmt.Println(resp.Results[i])
-	}
+	fmt.Printf("%+v\n", resp)
 
 }

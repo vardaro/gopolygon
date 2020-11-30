@@ -54,6 +54,7 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 	if err != nil {
 		return nil, err
 	}
+
 	result := &models.AggregatesResponse{}
 	err = unmarshalPolygonResponse(response, &result)
 	if err != nil {
@@ -199,6 +200,12 @@ func (c *Client) GroupedDailyBars(opts *models.GroupedDailyBarsQuery) (*models.G
 	return result, nil
 }
 
+func newAPIError(response *http.Response) error {
+	err := &models.APIError{}
+	unmarshalPolygonResponse(response, &err)
+	return err
+}
+
 // Casts a Polygon response to interface
 func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
 	defer response.Body.Close()
@@ -213,5 +220,13 @@ func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
 
 func get(url *url.URL) (*http.Response, error) {
 	fmt.Println(url)
-	return http.Get(url.String())
+
+	response, err := http.Get(url.String())
+
+	// Catch API error
+	if response.StatusCode != 200 {
+		return nil, newAPIError(response)
+	}
+
+	return response, err
 }
