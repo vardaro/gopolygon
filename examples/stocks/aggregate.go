@@ -34,4 +34,6 @@ func main() {
 
 	fmt.Printf("%+v\n", resp)
 
+	fmt.Println(resp.ResultsCount)
+
 }
