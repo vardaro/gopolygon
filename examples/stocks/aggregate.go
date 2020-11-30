@@ -14,6 +14,7 @@ func main() {
 		fmt.Println("Cant find API Key")
 		return
 	}
+	fmt.Println(apikey)
 	client := stocks.NewClient(apikey)
 
 	// Query the last month of data
@@ -29,6 +30,7 @@ func main() {
 	fmt.Println(resp)
 	if err != nil {
 		fmt.Println("Fail")
+		return
 	}
 
 	for i := 0; i < resp.ResultsCount; i++ {

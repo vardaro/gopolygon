@@ -12,10 +12,11 @@ import (
 )
 
 const (
-	routeAggregates     = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
-	routeHistoricTrades = "%v/v2/ticks/stocks/trades/%v/%v"
-	routeDailyOpenClose = "%v/v1/open-close/%v/%v"
-	routePreviousClose  = "%v/v2/aggs/ticker/%v/prev"
+	routeAggregates       = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
+	routeHistoricTrades   = "%v/v2/ticks/stocks/trades/%v/%v"
+	routeDailyOpenClose   = "%v/v1/open-close/%v/%v"
+	routePreviousClose    = "%v/v2/aggs/ticker/%v/prev"
+	routeGroupedDailyBars = "%v/v2/aggs/grouped/locale/us/market/stocks/%v"
 )
 
 var (
@@ -23,16 +24,16 @@ var (
 	get     = func(url *url.URL) (*http.Response, error) {
 		return http.Get(url.String())
 	}
-)
-
-// Client is polygon api client
-type Client struct {
-	APIKey string
-}
+) // If the user chose
 
 // NewClient returns a new Client instance.
 func NewClient(apikey string) *Client {
 	return &Client{APIKey: apikey}
+}
+
+// Client is polygon api client
+type Client struct {
+	APIKey string
 }
 
 // Aggregates corresponds to the /aggs/ route.
@@ -58,7 +59,6 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 	if err != nil {
 		return nil, err
 	}
-
 	result := &models.AggregatesResponse{}
 	err = unmarshalPolygonResponse(response, &result)
 	if err != nil {
@@ -69,6 +69,7 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 }
 
 // HistoricTrades queries the Historic Trades route.
+// Don't have a paid subscription to adequately test this
 // https://polygon.io/docs/get_v2_ticks_stocks_trades__ticker___date__anchor
 func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.HistoricTradesResponse, error) {
 	// Build URL
@@ -167,11 +168,40 @@ func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.Previou
 	result := &models.PreviousCloseResponse{}
 	err = unmarshalPolygonResponse(resp, &result)
 	if err != nil {
-		fmt.Println(err.Error())
 		return nil, err
 	}
 	return result, nil
 
+}
+
+// GroupedDailyBars queries the GroupedDaily route
+func (c *Client) GroupedDailyBars(opts *models.GroupedDailyBarsQuery) (*models.GroupedDailyBarsResponse, error) {
+	// Build URL
+	url, err := url.Parse(
+		fmt.Sprintf(routeGroupedDailyBars, baseURL, opts.Date))
+	if err != nil {
+		return nil, err
+	}
+
+	q := url.Query()
+	q.Set("apiKey", c.APIKey)
+
+	if opts.Unadjusted != nil {
+		q.Set("unadjusted", strconv.FormatBool(*opts.Unadjusted))
+	}
+
+	url.RawQuery = q.Encode()
+	resp, err := get(url)
+	if err != nil {
+		return nil, err
+	}
+
+	result := &models.GroupedDailyBarsResponse{}
+	err = unmarshalPolygonResponse(resp, &result)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }
 
 // Casts a Polygon response to interface

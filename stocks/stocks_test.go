@@ -91,3 +91,22 @@ func TestPreviousClose(t *testing.T) {
 		t.Errorf("PreviousClose.Adjusted = %v, want %v", resp.Adjusted, !resp.Adjusted)
 	}
 }
+
+func TestGroupedDailyBar(t *testing.T) {
+	query := &models.GroupedDailyBarsQuery{
+		Date: "2020-10-14",
+	}
+
+	resp, err := client.GroupedDailyBars(query)
+	if err != nil {
+		t.Errorf("Error in client.GroupedDailyBars")
+		return
+	}
+
+	expectedQueryCount := 8942
+	t.Log("Hi guys")
+	if expectedQueryCount != resp.QueryCount {
+		t.Errorf("PreviousClose.QueryCount = %v, want %v", resp.QueryCount, expectedQueryCount)
+	}
+
+}
