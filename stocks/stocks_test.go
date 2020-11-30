@@ -34,6 +34,28 @@ func TestClient(t *testing.T) {
 	}
 }
 
+func TestAPIError(t *testing.T) {
+	want := "Unknown API Key"
+
+	c := NewClient("bad api key that will fail")
+
+	query := &models.DailyOpenCloseQuery{
+		Symbol: "AAPL",
+		Date:   "2020-03-20",
+	}
+
+	_, err := c.DailyOpenClose(query)
+
+	if err == nil {
+		t.Errorf("Expected API Error")
+	} else {
+		if err.Error() != want {
+			t.Errorf("err.Error() = %v, want %v", err.Error(), want)
+		}
+	}
+
+}
+
 // Test the stock aggregate function.
 func TestAggregate(t *testing.T) {
 	query := &models.AggregatesQuery{
