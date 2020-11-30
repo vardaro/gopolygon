@@ -1,19 +1,15 @@
 package stocks
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"net/url"
 	"strconv"
 
+	"github.com/vardaro/gopolygon/common"
 	"github.com/vardaro/gopolygon/models"
 )
 
 const (
-	baseURL = "https://api.polygon.io"
-
 	routeAggregates       = "%v/v2/aggs/ticker/%v/range/%v/%v/%v/%v"
 	routeHistoricTrades   = "%v/v2/ticks/stocks/trades/%v/%v"
 	routeDailyOpenClose   = "%v/v1/open-close/%v/%v"
@@ -36,7 +32,7 @@ func NewClient(apikey string) *Client {
 func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(routeAggregates, baseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From, opts.To))
+		fmt.Sprintf(routeAggregates, common.BaseURL, opts.Symbol, opts.Multiplier, opts.Timespan, opts.From, opts.To))
 	if err != nil {
 		return nil, err
 	}
@@ -50,18 +46,9 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 	}
 
 	url.RawQuery = q.Encode()
-	response, err := get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.AggregatesResponse{}
-	err = unmarshalPolygonResponse(response, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
+	inter, err := common.Get(url, &models.AggregatesResponse{})
+	return inter.(*models.AggregatesResponse), err
 }
 
 // HistoricTrades queries the Historic Trades route.
@@ -70,7 +57,7 @@ func (c *Client) Aggregates(opts *models.AggregatesQuery) (*models.AggregatesRes
 func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.HistoricTradesResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(routeHistoricTrades, baseURL, opts.Symbol, opts.Date))
+		fmt.Sprintf(routeHistoricTrades, common.BaseURL, opts.Symbol, opts.Date))
 	if err != nil {
 		return nil, err
 	}
@@ -96,19 +83,8 @@ func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.Histo
 		q.Set("limit", strconv.FormatInt(*opts.Limit, 10))
 	}
 
-	resp, err := get(url)
-	if err != nil {
-		return nil, err
-	}
-
-	result := &models.HistoricTradesResponse{}
-	err = unmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
-
+	inter, err := common.Get(url, &models.HistoricTradesResponse{})
+	return inter.(*models.HistoricTradesResponse), err
 }
 
 // DailyOpenClose function to query the DailyOpenClose route
@@ -116,7 +92,7 @@ func (c *Client) HistoricTrades(opts *models.HistoricTradesQuery) (*models.Histo
 func (c *Client) DailyOpenClose(opts *models.DailyOpenCloseQuery) (*models.DailyOpenCloseResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(routeDailyOpenClose, baseURL, opts.Symbol, opts.Date))
+		fmt.Sprintf(routeDailyOpenClose, common.BaseURL, opts.Symbol, opts.Date))
 	if err != nil {
 		return nil, err
 	}
@@ -124,26 +100,16 @@ func (c *Client) DailyOpenClose(opts *models.DailyOpenCloseQuery) (*models.Daily
 	q := url.Query()
 	q.Set("apiKey", c.APIKey)
 	url.RawQuery = q.Encode()
-	resp, err := get(url)
 
-	if err != nil {
-		return nil, err
-	}
-
-	result := &models.DailyOpenCloseResponse{}
-	err = unmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-
-	return result, nil
+	inter, err := common.Get(url, &models.DailyOpenCloseResponse{})
+	return inter.(*models.DailyOpenCloseResponse), err
 }
 
 // PreviousClose function to query the Previous Close endpoint
 func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.PreviousCloseResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(routePreviousClose, baseURL, opts.Symbol))
+		fmt.Sprintf(routePreviousClose, common.BaseURL, opts.Symbol))
 	if err != nil {
 		return nil, err
 	}
@@ -156,17 +122,9 @@ func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.Previou
 	}
 
 	url.RawQuery = q.Encode()
-	resp, err := get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.PreviousCloseResponse{}
-	err = unmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
+	inter, err := common.Get(url, &models.PreviousCloseResponse{})
+	return inter.(*models.PreviousCloseResponse), err
 
 }
 
@@ -174,7 +132,7 @@ func (c *Client) PreviousClose(opts *models.PreviousCloseQuery) (*models.Previou
 func (c *Client) GroupedDailyBars(opts *models.GroupedDailyBarsQuery) (*models.GroupedDailyBarsResponse, error) {
 	// Build URL
 	url, err := url.Parse(
-		fmt.Sprintf(routeGroupedDailyBars, baseURL, opts.Date))
+		fmt.Sprintf(routeGroupedDailyBars, common.BaseURL, opts.Date))
 	if err != nil {
 		return nil, err
 	}
@@ -187,46 +145,7 @@ func (c *Client) GroupedDailyBars(opts *models.GroupedDailyBarsQuery) (*models.G
 	}
 
 	url.RawQuery = q.Encode()
-	resp, err := get(url)
-	if err != nil {
-		return nil, err
-	}
 
-	result := &models.GroupedDailyBarsResponse{}
-	err = unmarshalPolygonResponse(resp, &result)
-	if err != nil {
-		return nil, err
-	}
-	return result, nil
-}
-
-func newAPIError(response *http.Response) error {
-	err := &models.APIError{}
-	unmarshalPolygonResponse(response, &err)
-	return err
-}
-
-// Casts a Polygon response to interface
-func unmarshalPolygonResponse(response *http.Response, data interface{}) error {
-	defer response.Body.Close()
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return err
-	}
-
-	return json.Unmarshal(body, data)
-}
-
-func get(url *url.URL) (*http.Response, error) {
-	fmt.Println(url)
-
-	response, err := http.Get(url.String())
-
-	// Catch API error
-	if response.StatusCode != 200 {
-		return nil, newAPIError(response)
-	}
-
-	return response, err
+	inter, err := common.Get(url, &models.GroupedDailyBarsResponse{})
+	return inter.(*models.GroupedDailyBarsResponse), err
 }
