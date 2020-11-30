@@ -1,5 +1,8 @@
 package stocks
 
+// Although this is a test file, the test will often fail due
+// being rate limited by the api when testing each function consecutively
+
 import (
 	"fmt"
 	"os"
@@ -104,7 +107,6 @@ func TestGroupedDailyBar(t *testing.T) {
 	}
 
 	expectedQueryCount := 8942
-	t.Log("Hi guys")
 	if expectedQueryCount != resp.QueryCount {
 		t.Errorf("PreviousClose.QueryCount = %v, want %v", resp.QueryCount, expectedQueryCount)
 	}

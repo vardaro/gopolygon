@@ -22,6 +22,7 @@ const (
 var (
 	baseURL = "https://api.polygon.io"
 	get     = func(url *url.URL) (*http.Response, error) {
+		fmt.Println(url)
 		return http.Get(url.String())
 	}
 ) // If the user chose

@@ -27,7 +27,6 @@ func main() {
 	}
 
 	resp, err := client.Aggregates(query)
-	fmt.Println(resp)
 	if err != nil {
 		fmt.Println("Fail")
 		return
