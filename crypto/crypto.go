@@ -109,6 +109,7 @@ func (c *Client) DailyOpenClose(opts *models.CryptoDailyOpenCloseQuery) (*models
 	q.Set("apiKey", c.APIKey)
 	url.RawQuery = q.Encode()
 
+	fmt.Println(url)
 	inter, err := common.Get(url, &models.CryptoDailyOpenCloseResponse{})
 	return inter.(*models.CryptoDailyOpenCloseResponse), err
 }

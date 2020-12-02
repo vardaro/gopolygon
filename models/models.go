@@ -25,7 +25,7 @@ type HistoricTrade struct {
 	Q          int     `json:"q"`
 	I          string  `json:"i"` // Trade ID
 	X          int     `json:"x"`
-	S          int     `json:"s"`
+	S          float64 `json:"s"`
 	C          []int   `json:"c"`
 	P          float64 `json:"p"`
 	Z          int     `json:"z"`
