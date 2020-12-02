@@ -45,7 +45,7 @@ func main() {
 
 ### Crypto
 
-- [Crypto SDK Documenation](./forex/)
+- [Crypto SDK Documenation](./crypto/)
 
 
 #### Reference API not completed
