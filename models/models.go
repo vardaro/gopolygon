@@ -27,7 +27,7 @@ type HistoricTrade struct {
 	X          int     `json:"x"`
 	S          int     `json:"s"`
 	C          []int   `json:"c"`
-	P          float64 `json:"p"` // float64, as it's a trade price
+	P          float64 `json:"p"`
 	Z          int     `json:"z"`
 }
 
@@ -100,7 +100,23 @@ type DailyOpenCloseResponse struct {
 // why is polygon naming so inconsistent?
 type DailyOpenCloseQuery struct {
 	Symbol string
-	Date   string // I think this doesnt support milliseconds?
+	Date   string
+}
+
+type CryptoDailyOpenCloseResponse struct {
+	Symbol        string          `json:"symbol"`
+	IsUTC         bool            `json:"isUTC"`
+	Day           string          `json:"day"`
+	Open          float64         `json:"open"`
+	Close         float64         `json:"close"`
+	OpenTrades    []HistoricTrade `json:"openTrades"`
+	ClosingTrades []HistoricTrade `json:"ClosingTrades"`
+}
+
+type CryptoDailyOpenCloseQuery struct {
+	From string
+	To   string
+	Date string
 }
 
 // PreviousCloseResponse struct for PreviousClose endpoint
