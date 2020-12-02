@@ -37,10 +37,10 @@ func main() {
 
 ### Stocks
 
-- [Stocks SDK Documentation](./stocks/docs.md)
+- [Stocks SDK Documentation](./stocks/)
 
 ### Forex
 
-- [Forex SDK Documenation](./forex/docs.md)
+- [Forex SDK Documenation](./forex/)
 
 #### Reference, Crypto, Forex will be added in the future. 
