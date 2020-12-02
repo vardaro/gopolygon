@@ -43,4 +43,9 @@ func main() {
 
 - [Forex SDK Documenation](./forex/)
 
-#### Reference, Crypto, Forex will be added in the future. 
+### Crypto
+
+- [Crypto SDK Documenation](./forex/)
+
+
+#### Reference API not completed
