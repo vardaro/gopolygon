@@ -103,6 +103,7 @@ type DailyOpenCloseQuery struct {
 	Date   string
 }
 
+// CryptoDailyOpenClose represents response object of this route from the API
 type CryptoDailyOpenCloseResponse struct {
 	Symbol        string          `json:"symbol"`
 	IsUTC         bool            `json:"isUTC"`
@@ -113,6 +114,7 @@ type CryptoDailyOpenCloseResponse struct {
 	ClosingTrades []HistoricTrade `json:"ClosingTrades"`
 }
 
+// CryptoDailyOpenCloseQuery represents query params for this route on the API
 type CryptoDailyOpenCloseQuery struct {
 	From string
 	To   string
